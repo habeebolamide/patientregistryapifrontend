@@ -74,14 +74,7 @@ export default {
         },
 
         joinGroup(id){
-            // return console.log(id);
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${this.auth_token.replace(/"/g, '')}`,
-                }
-            };
-            this.$http.post(this.dynamic_route(`/group/${id}/joingroup`),{}, config)
+            this.$http.post(this.dynamic_route(`/group/${id}/joingroup`))
             .then((res) => {
                 this.$toast.success(res.data.message, {
                     timeout: 3000
