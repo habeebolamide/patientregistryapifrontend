@@ -13,6 +13,7 @@ import authMixin from './mixins/auth';
 import Axios from 'axios'
 import Paginate from 'vuejs-paginate';
 import Toast from "vue-toastification";
+import axiosConfig from './axios-config';
 // Import the CSS or use your own!
 import "vue-toastification/dist/index.css";
 Vue.component('paginate', Paginate);
@@ -22,7 +23,7 @@ const options = {
 
 
 Vue.use(Toast, options);
-Vue.prototype.$http = Axios;
+Vue.prototype.$http = axiosConfig;
 // un comment these  if you use firebase
 // import firebase from "firebase/app";
 // import "firebase/auth";
