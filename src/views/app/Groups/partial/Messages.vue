@@ -1,17 +1,25 @@
 <template>
     <div class="chat-container">
-    <div class="chat-messages">
-      <div v-for="msg in messages" :key="msg.id" class="chat-message">
-        <strong>{{ msg.user }}:</strong> {{ msg.message }}
+      <div class="chat-header">{{ group }}</div>
+      <div class="chat-messages">
+        <div
+          v-for="(msg, i) in messages"
+          :key="i"
+          :class="['chat-message', msg.user === user ? 'current-user' : '']"
+        >
+        <div  class="message-sender">{{ msg.user }}</div>
+          <div :class="msg.user === user ? 'my-message' : 'other-message'">
+            <span class="message-content">{{ msg.message }}</span>
+          </div>
+        </div>
       </div>
-    </div>
-    <form @submit.prevent="sendMessage" class="chat-form">
-      <input v-model="user" type="text" class="chat-input" placeholder="Your Name" required />
-      <input v-model="message" type="text" class="chat-input" placeholder="Your Message" required />
-      <button type="submit" class="chat-btn">Send</button>
-    </form>
+      <form @submit.prevent="sendMessage" class="chat-form">
+        <input v-model="message" type="text" class="chat-input" placeholder="Type a message..." required />
+        <button type="submit" class="chat-btn">Send</button>
+      </form>
     </div>
   </template>
+  
   
   <script>
   import axios from 'axios';
@@ -22,19 +30,36 @@
       return {
         user: '',
         message: '',
+        groupId: '',
         messages: [],
       };
     },
     methods: {
-
+    async fetchMessages() {
+    try {
+      const response = await this.$http.get( this.dynamic_route(`/group/${this.groupId}/messages`));
+      this.messages = response.data;
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
+    },
       sendMessage() {
       if (this.user.trim() === '' || this.message.trim() === '') return;
-      this.$http.post(this.dynamic_route('/group/messages'), { user: this.user, message: this.message }).then(() => {});
+      this.$http.post(this.dynamic_route('/group/messages'), { groupId: this.groupId,user: this.user, message: this.message }).then(() => {});
       this.message = '';
     },
+    handleIncomingMessage(data) {
+      this.messages.push(data);
     },
-    created() {
-        // console.log(JSON.parse(localStorage.getItem('auth_user')).auth_user.username);
+
+    isMessageFromCurrentUser(msg) {
+      return msg.user === this.user;
+    },
+    },
+    async created() {
+        this.group = this.$route.query.name
+        // return console.log(this.$route.query.name);
+        this.groupId = this.$route.params.groupid
         this.user = JSON.parse(localStorage.getItem('auth_user')).auth_user.username
       // Fetch initial messages from the database (if you have stored messages in the backend)
       // Replace this with your actual backend endpoint to fetch messages
@@ -46,15 +71,82 @@
       cluster: 'mt1',
       encrypted: true,
     });
-    this.chatChannel = this.pusher.subscribe('chat-channel');
-    this.chatChannel.bind('new-message', (data) => {
-      this.messages.push(data);
-    });
+       // Fetch existing messages for the group from the server and populate the chat
+
+    this.chatChannel = this.pusher.subscribe(this.groupId);
+    // Bind new messages for the specific group
+    this.chatChannel.bind('new-message', (data) => this.handleIncomingMessage(data));
+    this.fetchMessages();
     },
   };
   </script>
   
   <style>
+  .chat-message.current-user {
+  text-align: right;
+}
+.chat-messages {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 10px;
+  overflow-y: auto;
+}
+
+.chat-message {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.my-message {
+  align-self: flex-end;
+  background-color: #dcf8c6;
+  border-radius: 10px 0 10px 10px;
+  padding: 8px 12px;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.other-message {
+  align-self: flex-start;
+  background-color: #f5f5f5;
+  border-radius: 0 10px 10px 10px;
+  padding: 8px 12px;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.chat-form {
+  display: flex;
+  margin-top: 10px;
+  background-color: #f0f0f0;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 8px;
+  margin-right: 5px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+
+.chat-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.chat-btn:hover {
+  background-color: #0056b3;
+}
   .chat-container {
     max-width: 450px;
     margin: 0 auto;
@@ -84,7 +176,6 @@
   }
   
   .current-user {
-    background-color: #007bff;
     color: #fff;
     align-self: flex-end;
   }
