@@ -15,13 +15,12 @@ const routes = [
     path: "/app/pages",
     component: () => import("./views/app"), //webpackChunkName app
     // beforeEnter: authenticate,
-    redirect: "/app/pages/blank",
     children: [
       // pages
       {
         path: "/app/pages",
         component: () => import("./views/app/pages"),
-        redirect: "/app/pages/profile",
+        // redirect: "/app/pages/profile",
         children: [
           {
             path: "profile",
@@ -47,6 +46,20 @@ const routes = [
           {
             path: "groups",
             component: () => import("./views/app/Groups/Index"),
+            meta: {
+              requiresAuth: true, 
+            },
+          },
+          {
+            path: "my-group",
+            component: () => import("./views/app/Groups/partial/MyGroup.vue"),
+            meta: {
+              requiresAuth: true, 
+            },
+          },
+          {
+            path: ":groupid/message",
+            component: () => import("./views/app/Groups/partial/Messages.vue"),
             meta: {
               requiresAuth: true, 
             },

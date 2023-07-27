@@ -67,7 +67,7 @@
                   </router-link>
                 </li>
                 <li class="item-name">
-                  <router-link tag="a" to="/app/pages/icons" class href="#">
+                  <router-link tag="a" to="/app/pages/my-group" class href="#">
                     <span class>My Group</span>
                   </router-link>
                 </li>
