@@ -1,6 +1,6 @@
 {
-  "name": "gull-vue",
-  "version": "2.5.0",
+  "name": "patientregistryapifrontend",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
