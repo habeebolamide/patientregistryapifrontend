@@ -1,13 +1,12 @@
 import axios from "axios";
 import swal from 'sweetalert'
 import NProgress from 'nprogress'
-let token = localStorage.getItem("auth_token");
+// let token = localStorage.getItem("authToken");
 
 const appAxios = axios.create({
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': token ? `Bearer ${token.replace(/"/g, '')}` : null
-  }
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('auth_token')}`
+    }
 });
 // before a request is made start the nprogress
 appAxios.interceptors.request.use(config => {
@@ -22,7 +21,7 @@ appAxios.interceptors.response.use(response => {
 })
 const onErrorResponse = async (error) => {
     if (error.response) {
-        if (error.response.status === 401) {
+        if (error.response.status === 401 &&  error.response.data.message === 'Unauthenticated.') {
           var myItem = localStorage.getItem('unique_id');
           localStorage.clear();
           localStorage.setItem('unique_id',myItem);

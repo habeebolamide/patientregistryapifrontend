@@ -3,7 +3,7 @@
     <div class="auth-content">
       <div class="card o-hidden">
         <div class="row">
-          <div class="col-md-6 text-center" style="background-size: cover"
+          <!-- <div class="col-md-6 text-center" style="background-size: cover"
             :style="{ backgroundImage: 'url(' + signInImage + ')' }">
             <div class="pl-3 auth-right">
               <div class="auth-logo text-center mt-4">
@@ -25,9 +25,9 @@
               </div>
               <div class="flex-grow-1"></div>
             </div>
-          </div>
+          </div> -->
 
-          <b-col md="6">
+          <b-col md="12">
             <div class="p-4">
               <h1 class="mb-3 text-18">Sign Up</h1>
               <b-form @submit.prevent="submit">

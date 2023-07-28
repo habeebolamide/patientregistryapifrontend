@@ -1,7 +1,12 @@
 <template>
     <div class="main-content">
         <!-- <breadcumb :page="'Pricing Table'" :folder="'App'" /> -->
-
+        <VueElementLoading
+        :active="loading"
+        :text="loading_text"
+        spinner="line-scale"
+        color="var(--primary)"
+        />
         <b-row>
             <b-col md="12" xl="12" lg="12">
                 <b-card header-bg-variant="transparent" class="mb-30" header="Groups">
@@ -36,11 +41,15 @@
 </template>
 
 <script>
+import VueElementLoading from "vue-element-loading";
 
 export default {
     metaInfo: {
         // if no subcomponents specify a metaInfo.title, this title will be used
         title: "SignIn",
+    },
+    components:{
+        VueElementLoading
     },
     data() {
         return {
@@ -56,17 +65,28 @@ export default {
     methods: {
         
         getGroups() {
+            this.loading = true
+            this.loading_text = 'Fetching Group'
             const config = {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${this.auth_token.replace(/"/g, '')}`,
                 },
+                params: {
+                    page: this.currentPage,
+                    perPage: this.perPage,
+                },
             };
-            this.$http.get(this.dynamic_route('/group/patientgroup',{},config)).then((res) => {
+            this.$http.get(this.dynamic_route('/group/patientgroup',config))
+            .then((res) => {
                 this.groups = res.data.data.groups;
                 this.perPage = res.data.data.perPage;
                 this.groupCount = res.data.data.groupCount;
-            });
+            })
+            .finally(() => {
+                this.loading = false
+                this.loading_text = ''
+            })
         },
 
         ViewMessages(group){
@@ -77,8 +97,10 @@ export default {
     },
 
     mounted() {
-        this.auth_token = localStorage.getItem('auth_token')
         this.getGroups()
+    },
+    created(){
+        this.auth_token = localStorage.getItem('auth_token')
     }
 };
 </script>
