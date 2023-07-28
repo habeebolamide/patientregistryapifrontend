@@ -5,11 +5,11 @@ export default {
     methods: {
         dynamic_route(endUrl) {
                 // return `http://localhost:1000/api/v1${endUrl}`;
-                return `https://patient-registry.onrender.com/api/v1${endUrl}`;
+                return `https://patientregistry.onrender.com/api/v1${endUrl}`;
         },
         dynamic_auth_route(endUrl) {
             // return "http://localhost:1000/api/v1/patient" + endUrl;
-            return "https://patient-registry.onrender.com/api/v1/patient" + endUrl;
+            return "https://patientregistry.onrender.com/api/v1/patient" + endUrl;
           },
           tokenExpired(error) {
             if (

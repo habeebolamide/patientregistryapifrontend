@@ -109,6 +109,7 @@ export default {
     padding: 8px 12px;
     margin-bottom: 4px;
     color: #333;
+    max-width: 200px;
 }
 
 .other-message {
@@ -118,6 +119,7 @@ export default {
     padding: 8px 12px;
     margin-bottom: 4px;
     color: #333;
+    max-width: 200px;
 }
 
 .chat-form {
@@ -152,7 +154,7 @@ export default {
 }
 
 .chat-container {
-    max-width: 450px;
+    /* max-width: 450px; */
     margin: 0 auto;
     padding: 20px;
     /* border: 1px solid #ddd; */
