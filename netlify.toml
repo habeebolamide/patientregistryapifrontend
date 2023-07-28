@@ -1,0 +1,4 @@
+# netlify.toml
+
+[build]
+  node_version = "14.x" # Replace with the Node.js version you want to use
